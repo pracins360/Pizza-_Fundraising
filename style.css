@@ -104,7 +104,7 @@ body {
     display: block;
     text-align: center;
     margin-top: 8px;
-    color: #666;
+    color: white;
     font-size: 0.9em;
 }
 .urgent-banner {
@@ -416,4 +416,5 @@ h1, h2, h3, h4, h5, h6, p, span, div {
     width: 90%;
     max-width: 500px;
 }
+
 
