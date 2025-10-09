@@ -380,4 +380,40 @@ body {
     color: #666;
     font-size: 0.9em;
 }
+/* CENTRADO COMPLETO - FIX FUERTE */
+.container > * {
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.testimonial {
+    text-align: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.pizza-card, .call-options, .btn {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+}
+
+/* Centrar texto dentro de elementos */
+h1, h2, h3, h4, h5, h6, p, span, div {
+    text-align: center !important;
+}
+
+/* Centrar específicamente los testimonios */
+.testimonials h4 {
+    text-align: center !important;
+    width: 100%;
+}
+
+.testimonial {
+    text-align: center !important;
+    width: 90%;
+    max-width: 500px;
+}
 
