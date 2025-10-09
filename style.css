@@ -270,7 +270,7 @@ body {
     text-align: center;
     padding-top: 20px;
     border-top: 2px solid #dfe4ea;
-    color: #747d8c;
+    color: white;
 }
 
 /* RESPONSIVE */
@@ -416,5 +416,6 @@ h1, h2, h3, h4, h5, h6, p, span, div {
     width: 90%;
     max-width: 500px;
 }
+
 
 
