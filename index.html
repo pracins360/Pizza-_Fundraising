@@ -46,20 +46,26 @@
         </div>
 <!-- BOTONES DE ACCIÓN -->
 <div class="action-buttons">
-    <a href="tel:+59995120536" class="btn btn-call">
-        📞 LLAMAR AL +599 9512 0536
-    </a>
-    <a href="tel:+59995154108" class="btn btn-call">
-        📞 LLAMAR AL +599 9515 4108
-    </a>
+    <!-- BOTÓN DE LLAMADA ÚNICO -->
+    <div class="call-options">
+        <a href="tel:+59995120536" class="btn btn-call">
+            📞 LLAMAR PARA PEDIR
+        </a>
+        <div class="phone-numbers">
+            <small>+599 9512 0536 • +599 9515 4108</small>
+        </div>
+    </div>
     
-    <!-- BOTÓN SENTOO NUEVO -->
+    <!-- BOTÓN SENTOO -->
     <a href="https://pay.sentoo.me/p/d9d5ba6b-1de4-4c7f-bd0b-303727d49f88" 
        target="_blank" class="btn btn-sentoo">
         💳 PAGAR CON SENTOO
     </a>
     
-   
+    <!-- BOTÓN WHATSAPP -->
+    <button onclick="shareOnWhatsApp()" class="btn btn-whatsapp">
+        📱 COMPARTIR OFERTA
+    </button>
 </div>
         <!-- INFORMACIÓN -->
         <div class="info-section">
@@ -91,4 +97,5 @@
 </body>
 
 </html>
+
 
