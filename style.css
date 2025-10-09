@@ -327,4 +327,57 @@ body {
     margin-top: 5px;
 
 }
+/* FIX para botones después de eliminar uno */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.btn {
+    padding: 18px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+    width: 100%; /* Asegura que todos los botones tengan mismo ancho */
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-call {
+    background: #2ed573;
+    color: white;
+}
+
+.btn-sentoo {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+}
+
+.btn-whatsapp {
+    background: #25d366;
+    color: white;
+}
+
+/* Asegurar que los botones se vean consistentes */
+.call-options {
+    width: 100%;
+}
+
+.phone-numbers small {
+    display: block;
+    text-align: center;
+    margin-top: 8px;
+    color: #666;
+    font-size: 0.9em;
+}
 
