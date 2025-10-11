@@ -94,9 +94,109 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+/* ===== PUBLIC CONFIG (no organizer section needed) ===== */
+const PRICE_XCG = 20;                      // price per pizza
+const WA_NUMBER_INTL = '59995120536';      // WhatsApp number (digits only, no +)
+const DELIVERY_WINDOW = '20:00–21:00';
+
+/* ===== Grab UI elements (make sure these IDs exist in your HTML) ===== */
+const els = {
+  name:    document.getElementById('name'),
+  phone:   document.getElementById('phone'),
+  address: document.getElementById('address'),
+  qty:     document.getElementById('qty'),
+  date:    document.getElementById('date'),
+  total:   document.getElementById('total'),
+  submit:  document.getElementById('submit'),
+  paySentoo: document.querySelector('input[name="pay"][value="sentoo"]'),
+  payCod:    document.querySelector('input[name="pay"][value="cod"]'),
+  quotaMsg:  document.getElementById('quotaMsg'),
+  couponBadge: document.getElementById('couponBadge'),
+};
+
+/* ===== Coupon from URL (?c=P23Z) ===== */
+const couponParam = new URLSearchParams(location.search).get('c') || '';
+if (couponParam) localStorage.setItem('pizza_coupon_current', couponParam);
+const COUPON = localStorage.getItem('pizza_coupon_current') || couponParam || '';
+if (els.couponBadge) els.couponBadge.textContent = COUPON ? `Coupon: ${COUPON}` : '';
+
+/* ===== Total & counter helpers ===== */
+function currentPayMethod(){
+  if (els.paySentoo && els.paySentoo.checked) return 'sentoo';
+  return 'cod';
+}
+
+function updateTotals(){
+  const qty = Math.max(1, parseInt(els.qty?.value || '1', 10));
+  const total = qty * PRICE_XCG;
+  if (els.qty) els.qty.value = qty;
+  if (els.total) els.total.textContent = isNaN(total) ? '—' : total.toFixed(2);
+
+  // Per-day local counter (soft indicator only)
+  const day = els.date?.value || '';
+  const key = 'pizza_day_counts_v1';
+  const data = JSON.parse(localStorage.getItem(key) || '{}');
+  const dayQty = day ? (data[day] || 0) : 0;
+  if (els.quotaMsg) els.quotaMsg.textContent = day ? `This device has ${dayQty} booked for ${day}. Target ~3/day.` : '';
+}
+
+['change','input'].forEach(evt=>{
+  els.qty?.addEventListener(evt, updateTotals);
+  els.date?.addEventListener(evt, updateTotals);
+});
+updateTotals();
+
+/* ===== Build WhatsApp message & open chat ===== */
+function buildWhatsAppMessage(order){
+  return (
+`Pizza Fundraising — New Order
+Name: ${order.name}
+Phone: ${order.phone}
+Address: ${order.address}
+Qty: ${order.qty}
+Date: ${order.date} (${DELIVERY_WINDOW})
+Payment: ${order.pay === 'sentoo' ? 'Sentoo (proof via WhatsApp)' : 'Pay on delivery'}
+Total: ${order.total.toFixed(2)} XCG
+Coupon: ${COUPON || '—'}`
+  );
+}
+
+function submitOrder(){
+  const name = (els.name?.value || '').trim();
+  const phone = (els.phone?.value || '').trim();
+  const address = (els.address?.value || '').trim();
+  const qty = Math.max(1, parseInt(els.qty?.value || '1', 10));
+  const date = els.date?.value || '';
+  const pay  = currentPayMethod();
+
+  if (!name || !phone || !address || !qty || !date){
+    alert('Please fill name, phone, address, quantity, and date.');
+    return;
+  }
+
+  const total = qty * PRICE_XCG;
+  const order = { name, phone, address, qty, date, pay, total };
+
+  // local per-day counter (soft)
+  const key = 'pizza_day_counts_v1';
+  const data = JSON.parse(localStorage.getItem(key) || '{}');
+  data[date] = (data[date] || 0) + qty;
+  localStorage.setItem(key, JSON.stringify(data));
+
+  // WhatsApp open (use location.href to avoid popup blockers)
+  const msg = encodeURIComponent(buildWhatsAppMessage(order));
+  const wa  = `https://wa.me/${WA_NUMBER_INTL}?text=${msg}`;
+  location.href = wa;
+}
+
+els.submit?.addEventListener('click', submitOrder);
+</script>
+
 </body>
 
 </html>
+
 
 
 
