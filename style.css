@@ -452,6 +452,31 @@ h1, h2, h3, h4, h5, h6, p, span, div {
   transition:transform .15s;
 }
 .order #submit:hover { transform: translateY(-2px); }
+/* ===== Center alignment fix ===== */
+.container > * {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.testimonial {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.pizza-card, .call-options, .btn {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+
+/* Ensure all text elements center */
+h1, h2, h3, h4, h5, h6, p, span, div {
+  text-align: center !important;
+}
+
 
 
 
