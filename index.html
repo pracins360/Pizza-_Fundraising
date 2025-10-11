@@ -137,7 +137,110 @@
         </footer>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js"></script> <script>
+/* ===== CONFIG ===== */
+const PRICE_XCG = 25;                      // precio por pizza (coincide con tu banner)
+const WA_NUMBER_INTL = '59995120536';      // WhatsApp en dígitos (sin +)
+const DELIVERY_WINDOW = '20:00–21:00';
+const CAMPAIGN_MIN = '2025-10-10';         // ajusta si deseas
+const CAMPAIGN_MAX = '2025-10-25';
+
+/* ===== ELEMENTOS ===== */
+const els = {
+  name:    document.getElementById('name'),
+  phone:   document.getElementById('phone'),
+  address: document.getElementById('address'),
+  qty:     document.getElementById('qty'),
+  date:    document.getElementById('date'),
+  total:   document.getElementById('total'),
+  submit:  document.getElementById('submit'),
+  paySentoo: document.querySelector('input[name="pay"][value="sentoo"]'),
+  payCod:    document.querySelector('input[name="pay"][value="cod"]'),
+  quotaMsg:  document.getElementById('quotaMsg'),
+  couponBadge: document.getElementById('couponBadge'),
+};
+
+/* Fecha mínima/máxima (opcional) */
+if (els.date){
+  els.date.min = CAMPAIGN_MIN;
+  els.date.max = CAMPAIGN_MAX;
+  if (!els.date.value) els.date.value = CAMPAIGN_MIN;
+}
+
+/* Cupón de ?c= */
+const couponParam = new URLSearchParams(location.search).get('c') || '';
+if (couponParam) localStorage.setItem('pizza_coupon_current', couponParam);
+const COUPON = localStorage.getItem('pizza_coupon_current') || couponParam || '';
+if (els.couponBadge) els.couponBadge.textContent = COUPON ? `Cupón: ${COUPON}` : '';
+
+/* Helpers */
+function payMethod(){ return (els.paySentoo && els.paySentoo.checked) ? 'sentoo' : 'cod'; }
+
+function updateTotals(){
+  const qty = Math.max(1, parseInt(els.qty?.value || '1', 10));
+  const total = qty * PRICE_XCG;
+  if (els.qty) els.qty.value = qty;
+  if (els.total) els.total.textContent = isNaN(total) ? '—' : total.toFixed(2);
+
+  // contador local por día (solo indicador en este dispositivo)
+  const day = els.date?.value || '';
+  const key = 'pizza_day_counts_v1';
+  const data = JSON.parse(localStorage.getItem(key) || '{}');
+  const dayQty = day ? (data[day] || 0) : 0;
+  if (els.quotaMsg) els.quotaMsg.textContent = day ? `Este dispositivo tiene ${dayQty} reservadas para ${day}. Meta ~3/día.` : '';
+}
+
+['input','change'].forEach(ev=>{
+  els.qty?.addEventListener(ev, updateTotals);
+  els.date?.addEventListener(ev, updateTotals);
+});
+updateTotals();
+
+function buildMsg(order){
+return `Pizza Fundraising — Nuevo pedido
+Nombre: ${order.name}
+Teléfono: ${order.phone}
+Dirección: ${order.address}
+Cantidad: ${order.qty}
+Fecha: ${order.date} (${DELIVERY_WINDOW})
+Pago: ${order.pay === 'sentoo' ? 'Sentoo (enviar comprobante por WhatsApp)' : 'Pagar al entregar'}
+Total: ${order.total.toFixed(2)} XCG
+Cupón: ${COUPON || '—'}`;
+}
+
+function submitOrder(){
+  const name = (els.name?.value || '').trim();
+  const phone = (els.phone?.value || '').trim();
+  const address = (els.address?.value || '').trim();
+  const qty = Math.max(1, parseInt(els.qty?.value || '1', 10));
+  const date = els.date?.value || '';
+  const pay  = payMethod();
+
+  if (!name || !phone || !address || !qty || !date){
+    alert('Por favor completa nombre, teléfono, dirección, cantidad y fecha.');
+    return;
+  }
+
+  const total = qty * PRICE_XCG;
+  const order = { name, phone, address, qty, date, pay, total };
+
+  // contador local por día
+  const key = 'pizza_day_counts_v1';
+  const data = JSON.parse(localStorage.getItem(key) || '{}');
+  data[date] = (data[date] || 0) + qty;
+  localStorage.setItem(key, JSON.stringify(data));
+
+  const msg = encodeURIComponent(buildMsg(order));
+  const wa  = `https://wa.me/${WA_NUMBER_INTL}?text=${msg}`;
+  location.href = wa;
+}
+
+els.submit?.addEventListener('click', submitOrder);
+
+/* Si quieres que tus botones "COMPARTIR EN WHATSAPP" funcionen como difusión de oferta,
+   déjalos como están. Si quieres que uno envíe la orden, cámbiale a onclick="submitOrder()". */
+</script>
+
     <script>
 /* ===== PUBLIC CONFIG (no organizer section needed) ===== */
 const PRICE_XCG = 20;                      // price per pizza
@@ -240,6 +343,7 @@ els.submit?.addEventListener('click', submitOrder);
 </body>
 
 </html>
+
 
 
 
