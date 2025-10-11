@@ -129,6 +129,50 @@
     <small style="color:#666">Consejo: si usaste un enlace de vendedor, reenvía tu mensaje al vendedor para registrar tu premio.</small>
   </div>
 </section>
+<!-- === ORDENAR AHORA (FORMULARIO) === -->
+<section class="order card" style="background:#fff;border:1px solid #eee;border-radius:14px;padding:16px;margin:24px 0">
+  <h2 style="margin:0 0 8px;font-size:20px;font-weight:800">🧾 Ordenar ahora</h2>
+  <p id="couponBadge" style="margin:0 0 12px;color:#666;font-size:14px"></p>
+
+  <div class="row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <label style="font-size:14px">Nombre / Apodo
+      <input id="name" style="width:100%;margin-top:6px;padding:10px;border:1px solid #ccc;border-radius:10px" placeholder="Ej: Ana / @Ana"/>
+    </label>
+    <label style="font-size:14px">Teléfono
+      <input id="phone" style="width:100%;margin-top:6px;padding:10px;border:1px solid #ccc;border-radius:10px" placeholder="+599 9 xxx xxxx"/>
+    </label>
+
+    <label style="grid-column:1/-1;font-size:14px">Dirección (o punto de retiro)
+      <input id="address" style="width:100%;margin-top:6px;padding:10px;border:1px solid #ccc;border-radius:10px" placeholder="Calle, número, zona"/>
+    </label>
+
+    <label style="font-size:14px">Cantidad
+      <input id="qty" type="number" min="1" value="1" style="width:100%;margin-top:6px;padding:10px;border:1px solid #ccc;border-radius:10px"/>
+    </label>
+
+    <label style="font-size:14px">Fecha (Entrega 20:00–21:00)
+      <input id="date" type="date" style="width:100%;margin-top:6px;padding:10px;border:1px solid #ccc;border-radius:10px"/>
+    </label>
+  </div>
+
+  <fieldset style="margin-top:12px;font-size:14px">
+    <legend style="font-weight:600;margin-bottom:6px">Pago</legend>
+    <label style="margin-right:16px"><input type="radio" name="pay" value="sentoo" checked/> Sentoo (enviar comprobante por WhatsApp)</label>
+    <label><input type="radio" name="pay" value="cod"/> Pagar al entregar</label>
+  </fieldset>
+
+  <div style="margin-top:8px;font-size:14px">
+    Total (XCG): <strong id="total">—</strong>
+    <div id="quotaMsg" style="color:#666;font-size:12px;margin-top:4px"></div>
+  </div>
+
+  <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+    <button id="submit" class="btn" style="background:#059669;color:#fff;border:none;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer">
+      Enviar pedido por WhatsApp
+    </button>
+    <small style="color:#666">Consejo: si usaste un enlace de vendedor, reenvía tu mensaje al vendedor para registrar tu premio.</small>
+  </div>
+</section>
 
         <!-- FOOTER -->
         <footer class="footer">
@@ -343,6 +387,7 @@ els.submit?.addEventListener('click', submitOrder);
 </body>
 
 </html>
+
 
 
 
