@@ -141,4 +141,78 @@ on<!DOCTYPE html>
     <script src="script.js"></script>
     <script> <script>
 
+<script src="script.js"></script>
+<script>
+/* ===== CONFIG ===== */
+const PRICE_XCG = 25;                  // price per pizza
+const WA_NUMBER_INTL = '59995120536';  // WhatsApp digits only
+const DELIVERY_WINDOW = '20:00–21:00';
+
+/* ===== ELEMENTS ===== */
+const els = {
+  name:document.getElementById('name'),
+  phone:document.getElementById('phone'),
+  address:document.getElementById('address'),
+  qty:document.getElementById('qty'),
+  date:document.getElementById('date'),
+  total:document.getElementById('total'),
+  submit:document.getElementById('submit'),
+  paySentoo:document.querySelector('input[name="pay"][value="sentoo"]'),
+  payCod:document.querySelector('input[name="pay"][value="cod"]'),
+  quotaMsg:document.getElementById('quotaMsg'),
+  couponBadge:document.getElementById('couponBadge'),
+};
+
+/* Coupon from ?c= */
+const couponParam = new URLSearchParams(location.search).get('c') || '';
+if (couponParam) localStorage.setItem('pizza_coupon_current', couponParam);
+const COUPON = localStorage.getItem('pizza_coupon_current') || couponParam || '';
+if (els.couponBadge) els.couponBadge.textContent = COUPON ? `Cupón: ${COUPON}` : '';
+
+function payMethod(){ return (els.paySentoo && els.paySentoo.checked) ? 'sentoo' : 'cod'; }
+
+function updateTotals(){
+  const qty = Math.max(1, parseInt(els.qty?.value || '1', 10));
+  const total = qty * PRICE_XCG;
+  if (els.qty) els.qty.value = qty;
+  if (els.total) els.total.textContent = isNaN(total) ? '—' : total.toFixed(2);
+
+  const day = els.date?.value || '';
+  const key = 'pizza_day_counts_v1';
+  const data = JSON.parse(localStorage.getItem(key) || '{}');
+  const dayQty = day ? (data[day] || 0) : 0;
+  if (els.quotaMsg) els.quotaMsg.textContent = day ? `Este dispositivo tiene ${dayQty} reservadas para ${day}. Meta ~3/día.` : '';
+}
+['input','change'].forEach(ev=>{
+  els.qty?.addEventListener(ev, updateTotals);
+  els.date?.addEventListener(ev, updateTotals);
+});
+updateTotals();
+
+function buildMsg(o){ return `Pizza Fundraising — Nuevo pedido
+Nombre: ${o.name}
+Teléfono: ${o.phone}
+Dirección: ${o.address}
+Cantidad: ${o.qty}
+Fecha: ${o.date} (${DELIVERY_WINDOW})
+Pago: ${o.pay === 'sentoo' ? 'Sentoo (enviar comprobante por WhatsApp)' : 'Pagar al entregar'}
+Total: ${o.total.toFixed(2)} XCG
+Cupón: ${COUPON || '—'}`; }
+
+function submitOrder(){
+  const name=(els.name?.value||'').trim();
+  const phone=(els.phone?.value||'').trim();
+  const address=(els.address?.value||'').trim();
+  const qty=Math.max(1, parseInt(els.qty?.value||'1',10));
+  const date=els.date?.value||'';
+  const pay=payMethod();
+  if(!name||!phone||!address||!qty||!date){ alert('Completa nombre, teléfono, dirección, cantidad y fecha.'); return; }
+  const total=qty*PRICE_XCG;
+  const o={name,phone,address,qty,date,pay,total};
+  const msg=encodeURIComponent(buildMsg(o));
+  location.href=`https://wa.me/${WA_NUMBER_INTL}?text=${msg}`;
+}
+els.submit?.addEventListener('click', submitOrder);
+</script>
+
 
